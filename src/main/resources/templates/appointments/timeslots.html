@@ -4,21 +4,37 @@
 <head>
     <title>Select Time Slot</title>
     <style>
-        .timeslots-container {
-            max-width: 800px;
+        .content-container {
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: normal;
+            color: #333;
+            margin: 0;
+        }
+        .calendar-icon {
+            width: 24px;
+            height: 24px;
+            color: #333;
         }
         .timeslots-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-        }
-        .date-nav {
-            display: flex;
-            align-items: center;
-            gap: 20px;
+            padding: 0 10px;
         }
         .back-link {
             color: #333;
@@ -26,82 +42,118 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 16px;
+        }
+        .date-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .date-display {
+            font-size: 32px;
+            font-weight: normal;
+            color: #333;
+            text-transform: lowercase;
         }
         .nav-btn {
-            padding: 8px 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: white;
-            cursor: pointer;
-            text-decoration: none;
+            background: none;
+            border: none;
+            font-size: 24px;
             color: #333;
+            cursor: pointer;
+            padding: 5px 10px;
+            text-decoration: none;
         }
         .filters {
             display: flex;
             gap: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            padding: 0 10px;
         }
         .filter-select {
-            padding: 8px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
             min-width: 200px;
+            font-size: 16px;
+            color: #333;
+            background-color: white;
         }
         .timeslots-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
+            gap: 20px;
+            padding: 0 10px;
         }
         .time-slot {
-            padding: 15px;
-            border: 1px solid #ddd;
+            aspect-ratio: 1;
+            background: white;
             border-radius: 4px;
-            text-align: center;
             position: relative;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            margin: 2px;
+            min-height: 100px;
+            transition: background-color 0.2s;
         }
         .time-slot.available {
             cursor: pointer;
-            background: #f8f9fa;
         }
         .time-slot.available:hover {
             background: #e9ecef;
         }
         .time-slot.unavailable {
-            background: #f8f9fa;
-            color: #adb5bd;
-            cursor: not-allowed;
+            color: #ccc;
+            background: transparent;
+            box-shadow: none;
+        }
+        .time {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
         }
         .doctor-name {
-            font-size: 0.9em;
+            font-size: 14px;
             color: #666;
-            margin-top: 5px;
         }
         .time-slot.available::after {
             content: '';
             position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
+            bottom: 0;
+            left: 10%;
+            right: 10%;
             height: 2px;
             background: #ff6b00;
-            border-radius: 2px;
         }
     </style>
 </head>
 <body>
     <div layout:fragment="content">
-        <div class="timeslots-container">
+        <div class="content-container">
+            <div class="page-header">
+                <svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <h1>CalendarAppo</h1>
+            </div>
+
             <div class="timeslots-header">
                 <a th:href="@{/appointments/calendar}" class="back-link">
-                    &lt; Back to Calendar
+                    ‹ Back to Calendar
                 </a>
                 <div class="date-nav">
                     <a th:href="@{/appointments/timeslots(date=${previousDate},clinicId=${selectedClinicId},serviceId=${selectedServiceId})}" 
-                       class="nav-btn">&lt;</a>
-                    <h2 th:text="${#temporals.format(selectedDate, 'EEEE, MMMM d, yyyy')}">Monday, February 25, 2024</h2>
+                       class="nav-btn">‹</a>
+                    <h2 class="date-display" th:text="${#strings.toLowerCase(#temporals.format(selectedDate, 'EEEE, MMMM d'))}">monday, february 25</h2>
                     <a th:href="@{/appointments/timeslots(date=${nextDate},clinicId=${selectedClinicId},serviceId=${selectedServiceId})}" 
-                       class="nav-btn">&gt;</a>
+                       class="nav-btn">›</a>
                 </div>
             </div>
 
@@ -132,7 +184,7 @@
             <div class="timeslots-grid">
                 <th:block th:each="slot : ${timeSlots.timeSlots}">
                     <div th:class="'time-slot ' + (${slot.value.available} ? 'available' : 'unavailable')">
-                        <span th:text="${#temporals.format(slot.key, 'HH:mm')}">09:00</span>
+                        <span class="time" th:text="${#temporals.format(slot.key, 'HH:mm')}">09:00</span>
                         <div th:if="${slot.value.available}" class="doctor-name" 
                              th:text="${slot.value.doctorName}">Dr. Smith</div>
                         <form th:if="${slot.value.available}" 

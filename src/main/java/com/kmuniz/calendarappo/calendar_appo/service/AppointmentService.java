@@ -1,6 +1,5 @@
 package com.kmuniz.calendarappo.calendar_appo.service;
 
-
 import com.kmuniz.calendarappo.calendar_appo.model.*;
 import org.springframework.stereotype.Service;
 
@@ -14,19 +13,17 @@ import java.util.List;
 @Service
 public class AppointmentService {
 
-
     public CalendarDTO generateCalendarData(YearMonth month) {
         CalendarDTO calendar = new CalendarDTO();
         LocalDate firstOfMonth = month.atDay(1);
-        LocalDate lastOfMonth = month.atEndOfMonth();
-
+        
         // Find the first day of the week containing the 1st of the month
         LocalDate firstDayOfCalendar = firstOfMonth.minusDays(firstOfMonth.getDayOfWeek().getValue() - 1);
-
-        // Generate 6 weeks to ensure we cover the whole month
+        
         List<CalendarDTO.DayDTO> currentWeek = new ArrayList<>();
         LocalDate currentDate = firstDayOfCalendar;
 
+        // Generate 6 weeks to ensure we cover the whole month
         for (int i = 0; i < 42; i++) { // 6 weeks * 7 days
             CalendarDTO.DayDTO day = new CalendarDTO.DayDTO();
             day.setDate(currentDate);
@@ -37,7 +34,7 @@ public class AppointmentService {
             currentWeek.add(day);
 
             if (currentWeek.size() == 7) {
-                calendar.getWeeks().add(currentWeek);
+                calendar.addWeek(currentWeek);
                 currentWeek = new ArrayList<>();
             }
 
@@ -118,7 +115,19 @@ public class AppointmentService {
     }
 
     public List<MedicalServiceDTO> getAvailableServices(Long clinicId) {
-        return null;
+        // Sample data for demonstration
+        List<MedicalServiceDTO> services = new ArrayList<>();
+        //TODO clinicId == null for now
+        // Assuming clinicId 1 has these services
+        if (clinicId == null) {
+            services.add(new MedicalServiceDTO(1L, "General Consultation", "Basic health check-up and consultation."));
+            services.add(new MedicalServiceDTO(2L, "Pediatrics", "Health services for children."));
+            services.add(new MedicalServiceDTO(3L, "Dermatology", "Skin care and treatment."));
+        }
+        
+        // Add more conditions for other clinicIds if needed
+        
+        return services;
     }
 
     public AppointmentDTO bookAppointment(AppointmentBookingDTO booking) {
@@ -166,3 +175,4 @@ public class AppointmentService {
     }
 
 }
+

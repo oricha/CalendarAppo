@@ -9,16 +9,19 @@ import java.util.List;
 public class CalendarDTO {
     private List<List<DayDTO>> weeks = new ArrayList<>();
 
-    public Object weeks() {
-        //TODO implement
-        return null;
-    }
-
     @Data
     public static class DayDTO {
         private LocalDate date;
         private boolean isCurrentMonth;
         private boolean isAvailable;
         private boolean hasAppointments;
+    }
+
+    public List<List<DayDTO>> getWeeks() {
+        return weeks;
+    }
+
+    public void addWeek(List<DayDTO> week) {
+        weeks.add(week);
     }
 } 

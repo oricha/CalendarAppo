@@ -34,7 +34,7 @@ public class AppointmentController {
             model.addAttribute("currentDate", selectedMonth.atDay(1));
             model.addAttribute("previousMonth", selectedMonth.minusMonths(1));
             model.addAttribute("nextMonth", selectedMonth.plusMonths(1));
-            model.addAttribute("calendar", calendar.weeks());
+            model.addAttribute("calendar", calendar.getWeeks());
             
             return "appointments/calendar";
         } catch (Exception e) {

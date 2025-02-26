@@ -172,7 +172,7 @@
                 <select class="filter-select"
                         th:onchange="'window.location.href=\'' + @{/appointments/timeslots(date=${selectedDate},clinicId=${selectedClinicId})} + '&serviceId=\' + this.value'">
                     <option value="">Select Service</option>
-                    <option th:each="service : ${services}"
+                    <option th:each="service : ${medicalServices}"
                             th:value="${service.id}"
                             th:text="${service.name}"
                             th:selected="${service.id == selectedServiceId}">

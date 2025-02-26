@@ -52,14 +52,14 @@ public class AppointmentController {
         try {
             TimeSlotDTO timeSlots = appointmentService.getAvailableTimeSlots(date, clinicId, serviceId);
             List<ClinicDTO> clinics = appointmentService.getAvailableClinics();
-            List<MedicalServiceDTO> services = appointmentService.getAvailableServices(clinicId);
+            List<MedicalServiceDTO> medicalServices = appointmentService.getAvailableServices(clinicId);
 
             model.addAttribute("selectedDate", date);
             model.addAttribute("previousDate", date.minusDays(1));
             model.addAttribute("nextDate", date.plusDays(1));
             model.addAttribute("timeSlots", timeSlots);
             model.addAttribute("clinics", clinics);
-            model.addAttribute("services", services);
+            model.addAttribute("services", medicalServices);
             model.addAttribute("selectedClinicId", clinicId);
             model.addAttribute("selectedServiceId", serviceId);
 

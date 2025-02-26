@@ -1,7 +1,9 @@
 package com.kmuniz.calendarappo.calendar_appo.model;
 
+import lombok.Data;
 import java.time.LocalDateTime;
 
+@Data
 public class AppointmentDTO {
     private Long id;
     private LocalDateTime appointmentDate;
@@ -19,6 +21,4 @@ public class AppointmentDTO {
 
     private Long serviceId;
     private String serviceName;
-
-    // Getters and Setters
 }

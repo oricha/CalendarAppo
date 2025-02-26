@@ -4,9 +4,64 @@
     <head>
         <title>[[#{home.index.headline}]]</title>
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
+        <style>
+            .nav-menu {
+                margin-bottom: 2rem;
+            }
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+            .dropdown-btn {
+                background-color: #fff;
+                border: 1px solid #ddd;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #fff;
+                min-width: 200px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                border-radius: 4px;
+                z-index: 1;
+            }
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+            .dropdown-content a {
+                color: #333;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+            .dropdown-content a:hover {
+                background-color: #f5f5f5;
+            }
+        </style>
     </head>
     <body>
         <div layout:fragment="content">
+            <div class="nav-menu">
+                <div class="dropdown">
+                    <button class="dropdown-btn">
+                        <span>Appointments</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="dropdown-content">
+                        <a th:href="@{/appointments/calendar}">Schedule Appointment</a>
+                        <a th:href="@{/appointments/my-appointments}">My Appointments</a>
+                    </div>
+                </div>
+            </div>
+
             <h1 class="grow text-3xl md:text-4xl font-medium mb-8">[[#{home.index.headline}]]</h1>
             <p class="mb-4">[(#{home.index.text})]</p>
             <p class="mb-12">

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Schedule Appointment</title>
+    <style>
+        .calendar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: normal;
+            color: #333;
+            margin: 0;
+        }
+        .calendar-icon {
+            width: 24px;
+            height: 24px;
+            color: #333;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 0 10px;
+        }
+        .month-title {
+            font-size: 32px;
+            font-weight: normal;
+            color: #333;
+            text-transform: lowercase;
+        }
+        .month-title .year {
+            color: #999;
+            margin-left: 8px;
+        }
+        .month-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .month-text {
+            font-size: 20px;
+            color: #333;
+            text-transform: lowercase;
+        }
+        .nav-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            padding: 5px 10px;
+            text-decoration: none;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            padding: 0 10px;
+        }
+        .weekday {
+            text-align: center;
+            padding: 15px 5px;
+            color: rgb(153, 102, 102);
+            font-weight: normal;
+            font-size: 16px;
+        }
+        .day {
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #333;
+            margin: 2px;
+            min-height: 80px;
+        }
+        .day:not(.current-month) {
+            color: #ccc;
+            background: transparent;
+            box-shadow: none;
+        }
+        .day.available {
+            cursor: pointer;
+        }
+        .day.available:hover {
+            background: #f8f9fa;
+        }
+        .day.has-appointments::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: #ff6b00;
+        }
+        .day-link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="calendar-container">
+            <div class="page-header">
+                <svg class="calendar-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <h1>CalendarAppo</h1>
+            </div>
+            
+            <div class="calendar-header">
+                <h2 class="month-title">
+                    <span th:text="${#strings.toLowerCase(#temporals.format(currentDate, 'MMMM'))}">junio</span>
+                    <span class="year" th:text="${#temporals.format(currentDate, 'yyyy')}">2025</span>
+                </h2>
+                <div class="month-nav">
+                    <span class="month-text" th:text="${#strings.toLowerCase(#temporals.format(currentDate, 'MMMM'))}">junio</span>
+                    <a th:href="@{/appointments/calendar(month=${nextMonth})}" class="nav-btn">›</a>
+                </div>
+            </div>
+
+            <div class="calendar-grid">
+                <!-- Weekday headers -->
+                <div class="weekday">Lu</div>
+                <div class="weekday">Ma</div>
+                <div class="weekday">Mi</div>
+                <div class="weekday">Ju</div>
+                <div class="weekday">Vi</div>
+                <div class="weekday">Sa</div>
+                <div class="weekday">Do</div>
+
+                <!-- Calendar days -->
+                <th:block th:each="week : ${calendar}">
+                    <th:block th:each="day : ${week}">
+                        <div th:class="'day' + 
+                                     (${day.currentMonth} ? ' current-month' : '') + 
+                                     (${day.available} ? ' available' : '') +
+                                     (${day.hasAppointments} ? ' has-appointments' : '')">
+                            <span th:text="${#temporals.format(day.date, 'd')}">1</span>
+                            <a th:if="${day.available}" 
+                               th:href="@{/appointments/timeslots(date=${day.date})}"
+                               class="day-link"></a>
+                        </div>
+                    </th:block>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
